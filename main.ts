@@ -4,8 +4,8 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`tile4`, function (sprite, loc
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -230
+        music.pewPew.play()
     }
-    music.pewPew.play()
 })
 function startNextLevel () {
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -237,8 +237,10 @@ game.onUpdate(function () {
         if (value.isHittingTile(CollisionDirection.Bottom)) {
             if (value.vx < 0 && !(value.tileKindAt(TileDirection.Left, assets.tile`transparency16`))) {
                 value.vy = -150
+                music.thump.play()
             } else if (value.vx > 0 && !(value.tileKindAt(TileDirection.Right, assets.tile`transparency16`))) {
                 value.vy = -150
+                music.thump.play()
             }
         } else if (value.isHittingTile(CollisionDirection.Left)) {
             value.vx = 30
