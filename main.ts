@@ -5,6 +5,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -230
     }
+    music.pewPew.play()
 })
 function startNextLevel () {
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -143,22 +144,30 @@ function startNextLevel () {
     tiles.placeOnRandomTile(mySprite, assets.tile`tile3`)
     for (let value of tiles.getTilesByType(assets.tile`myTile`)) {
         myEnemy = sprites.create(img`
-            . . . . . . . . . . . . . . . . 
-            . . . e e . . . . . . . . . . . 
-            . . e e e . e e . . . . . . . . 
-            . . e 3 e e 3 e e . e e e e . . 
-            . . e 3 4 e 3 4 e c 4 4 4 e . . 
-            . e 4 4 4 4 4 4 e c 4 e 4 e e . 
-            e e 2 1 4 4 2 1 e 4 4 e 4 4 e . 
-            e 4 4 4 4 4 4 4 4 4 e e e 4 e . 
-            e 4 1 f f 1 e 4 4 e e c e 4 e . 
-            e e 1 f f 1 f 4 4 4 4 c e 4 e e 
-            c c f f f f f 4 4 4 4 c e 4 4 e 
-            c c 2 f 2 2 f 4 4 4 4 c e e 4 e 
-            c c 2 2 2 2 2 4 4 4 e c 4 4 4 e 
-            . c c 2 2 2 4 4 4 e . . 4 e 4 c 
-            . . . c c c c c c c . . c c c . 
-            . . . . . . . . . . . . . . . . 
+            ................
+            ...ee...........
+            ..eee.ee........
+            ..e3ee3ee.eeee..
+            ..e34e34ec444e..
+            .e444444ec4e4ee.
+            ee214421e44e44e.
+            e444444444eee4e.
+            e41ff1e44eece4e.
+            ee1ff1f4444ce4ee
+            ecfffff4444ce44e
+            ec2f22f4444cee4e
+            4c22222444ec444e
+            44c222444ec.4e4c
+            4e4cccccccc.ccc.
+            .cce44cc44e.....
+            ...e4eec4e......
+            ...e4e.e4e......
+            ...e4e.e4e......
+            ...e4e.e44......
+            .4444e.e4e44....
+            4eee4e.e4eee44..
+            4e444e.e4444e4..
+            cccce...ceeccc..
             `, SpriteKind.Enemy)
         tiles.placeOnTile(myEnemy, value)
         myEnemy.ay = 500
@@ -169,9 +178,31 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`tile2`, function (sprite, loc
     game.over(false, effects.slash)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    otherSprite.destroy(effects.confetti, 100)
     if (mySprite.bottom < otherSprite.y) {
         mySprite.vy = -230
+        otherSprite.setImage(img`
+            ................
+            ...ee...........
+            ..eee.ee........
+            ..e3ee3ee.eeee..
+            ..e34e34ec444e..
+            .e444444ec4e4ee.
+            ee214421e44e44e.
+            e444444444eee4e.
+            e41ff1e44eece4e.
+            ee1ff1f4444ce4ee
+            ecfffff4444ce44e
+            ec2f22f4444cee4e
+            4c22222444ec444e
+            44c222444ec.4e4c
+            4e4cccccccccccc.
+            .cce44cc44ecccc.
+            ccce4eec4eeee...
+            eeee4e.e444e....
+            .e444e.e4eeee...
+            `)
+        otherSprite.destroy(effects.confetti, 500)
+        music.knock.play()
     } else {
         info.changeLifeBy(-1)
     }
@@ -187,8 +218,8 @@ mySprite = sprites.create(img`
     . 3 3 b 3 3 1 1 3 3 3 1 1 1 3 . 
     . 3 3 3 3 1 1 f 1 3 3 1 f 1 3 . 
     . 3 3 3 3 3 1 1 1 3 3 1 1 1 3 . 
-    . 3 3 3 3 3 3 3 3 3 3 3 1 3 3 . 
-    . 3 3 3 3 3 3 3 3 3 3 3 3 3 3 . 
+    . 3 3 3 3 3 9 3 3 3 3 3 9 3 3 . 
+    . 3 3 3 3 3 9 3 3 3 3 3 9 3 3 . 
     . c 3 3 c 3 3 3 3 f f f 3 3 3 . 
     . c 3 3 c 3 3 3 3 f f 3 3 3 3 . 
     . 3 c c 3 3 3 3 3 3 3 3 3 3 3 . 
@@ -204,50 +235,66 @@ startNextLevel()
 game.onUpdate(function () {
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
         if (value.isHittingTile(CollisionDirection.Bottom)) {
-            if (value.vx < 0 && value.tileKindAt(TileDirection.Left, assets.tile`tile1`)) {
+            if (value.vx < 0 && !(value.tileKindAt(TileDirection.Left, assets.tile`transparency16`))) {
                 value.vy = -150
-            } else if (value.vx > 0 && value.tileKindAt(TileDirection.Right, assets.tile`tile1`)) {
+            } else if (value.vx > 0 && !(value.tileKindAt(TileDirection.Right, assets.tile`transparency16`))) {
                 value.vy = -150
             }
         } else if (value.isHittingTile(CollisionDirection.Left)) {
             value.vx = 30
             value.setImage(img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . e e . . . 
-                . . . . . . . . e e . e e e . . 
-                . . e e e e . e e 3 e e 3 e . . 
-                . . e 4 4 4 c e 4 3 e 4 3 e . . 
-                . e e 4 e 4 c e 4 4 4 4 4 4 e . 
-                . e 4 4 e 4 4 e 1 2 4 4 1 2 e e 
-                . e 4 e e e 4 4 4 4 4 4 4 4 4 e 
-                . e 4 e c e e 4 4 e 1 f f 1 4 e 
-                e e 4 e c 4 4 4 4 f 1 f f 1 e e 
-                e 4 4 e c 4 4 4 4 f f f f f c c 
-                e 4 e e c 4 4 4 4 f 2 2 f 2 c c 
-                e 4 4 4 c e 4 4 4 2 2 2 2 2 c c 
-                c 4 e 4 . . e 4 4 4 2 2 2 c c . 
-                . c c c . . c c c c c c c . . . 
-                . . . . . . . . . . . . . . . . 
+                ................
+                ...........ee...
+                ........ee.eee..
+                ..eeee.ee3ee3e..
+                ..e444ce43e43e..
+                .ee4e4ce444444e.
+                .e44e44e124412ee
+                .e4eee444444444e
+                .e4ecee44e1ff14e
+                ee4ec4444f1ff1ee
+                e44ec4444fffffce
+                e4eec4444f22f2ce
+                e444ce44422222c4
+                c4e4.ce444222c44
+                .ccc.cccccccc4e4
+                .....e44cc44ecc.
+                ......e4cee4e...
+                ......e4e.e4e...
+                ......e4e.e4e...
+                ......44e.e4e...
+                ....44e4e.e4444.
+                ..44eee4e.e4eee4
+                ..4e4444e.e444e4
+                ..ccceec...ecccc
                 `)
         } else if (value.isHittingTile(CollisionDirection.Right)) {
             value.vx = -30
             value.setImage(img`
-                . . . . . . . . . . . . . . . . 
-                . . . e e . . . . . . . . . . . 
-                . . e e e . e e . . . . . . . . 
-                . . e 3 e e 3 e e . e e e e . . 
-                . . e 3 4 e 3 4 e c 4 4 4 e . . 
-                . e 4 4 4 4 4 4 e c 4 e 4 e e . 
-                e e 2 1 4 4 2 1 e 4 4 e 4 4 e . 
-                e 4 4 4 4 4 4 4 4 4 e e e 4 e . 
-                e 4 1 f f 1 e 4 4 e e c e 4 e . 
-                e e 1 f f 1 f 4 4 4 4 c e 4 e e 
-                c c f f f f f 4 4 4 4 c e 4 4 e 
-                c c 2 f 2 2 f 4 4 4 4 c e e 4 e 
-                c c 2 2 2 2 2 4 4 4 e c 4 4 4 e 
-                . c c 2 2 2 4 4 4 e . . 4 e 4 c 
-                . . . c c c c c c c . . c c c . 
-                . . . . . . . . . . . . . . . . 
+                ................
+                ...ee...........
+                ..eee.ee........
+                ..e3ee3ee.eeee..
+                ..e34e34ec444e..
+                .e444444ec4e4ee.
+                ee214421e44e44e.
+                e444444444eee4e.
+                e41ff1e44eece4e.
+                ee1ff1f4444ce4ee
+                ecfffff4444ce44e
+                ec2f22f4444cee4e
+                4c22222444ec444e
+                44c222444ec.4e4c
+                4e4cccccccc.ccc.
+                .cce44cc44e.....
+                ...e4eec4e......
+                ...e4e.e4e......
+                ...e4e.e4e......
+                ...e4e.e44......
+                .4444e.e4e44....
+                4eee4e.e4eee44..
+                4e444e.e4444e4..
+                cccce...ceeccc..
                 `)
         }
     }
