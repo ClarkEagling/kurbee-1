@@ -1,9 +1,16 @@
+namespace SpriteKind {
+    export const Coin = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    info.changeScoreBy(1)
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`tile4`, function (sprite, location) {
     startNextLevel()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-        mySprite.vy = -230
+        mySprite.vy = -220
         music.pewPew.play()
     }
 })
@@ -173,11 +180,111 @@ function startNextLevel () {
         myEnemy.ay = 500
         myEnemy.vx = -30
     }
+    for (let index = 0; index < 20; index++) {
+        coiny = sprites.create(img`
+            . . b b b b . . 
+            . b 5 5 5 5 b . 
+            b 5 d 3 3 d 5 b 
+            b 5 3 5 5 1 5 b 
+            c 5 3 5 5 1 d c 
+            c d d 1 1 d d c 
+            . f d d d d f . 
+            . . f f f f . . 
+            `, SpriteKind.Coin)
+        animation.runImageAnimation(
+        coiny,
+        [img`
+            . . b b b b . . 
+            . b 5 5 5 5 b . 
+            b 5 d 3 3 d 5 b 
+            b 5 3 5 5 1 5 b 
+            c 5 3 5 5 1 d c 
+            c d d 1 1 d d c 
+            . f d d d d f . 
+            . . f f f f . . 
+            `,img`
+            . . b b b . . . 
+            . b 5 5 5 b . . 
+            b 5 d 3 d 5 b . 
+            b 5 3 5 1 5 b . 
+            c 5 3 5 1 d c . 
+            c 5 d 1 d d c . 
+            . f d d d f . . 
+            . . f f f . . . 
+            `,img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . b 5 d 1 5 b . 
+            . b 5 3 1 5 b . 
+            . c 5 3 1 d c . 
+            . c 5 1 d d c . 
+            . . f d d f . . 
+            . . . f f . . . 
+            `,img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . . b 1 1 b . . 
+            . . b 5 5 b . . 
+            . . b d d b . . 
+            . . c d d c . . 
+            . . c 3 3 c . . 
+            . . . f f . . . 
+            `,img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . b 5 1 d 5 b . 
+            . b 5 1 3 5 b . 
+            . c d 1 3 5 c . 
+            . c d d 1 5 c . 
+            . . f d d f . . 
+            . . . f f . . . 
+            `,img`
+            . . . b b b . . 
+            . . b 5 5 5 b . 
+            . b 5 d 3 d 5 b 
+            . b 5 1 5 3 5 b 
+            . c d 1 5 3 5 c 
+            . c d d 1 d 5 c 
+            . . f d d d f . 
+            . . . f f f . . 
+            `],
+        100,
+        true
+        )
+        tiles.placeOnRandomTile(coiny, assets.tile`transparency16`)
+    }
+    for (let index = 0; index < 2; index++) {
+        fruit = sprites.create(img`
+            . . . . . . . . . . . 6 6 6 6 6 
+            . . . . . . . . . 6 6 7 7 7 7 8 
+            . . . . . . 8 8 8 7 7 8 8 6 8 8 
+            . . e e e e c 6 6 8 8 . 8 7 8 . 
+            . e 2 5 4 2 e c 8 . . . 6 7 8 . 
+            e 2 4 2 2 2 2 2 c . . . 6 7 8 . 
+            e 2 2 2 2 2 2 2 c . . . 8 6 8 . 
+            e 2 e e 2 2 2 2 e e e e c 6 8 . 
+            c 2 e e 2 2 2 2 e 2 5 4 2 c 8 . 
+            . c 2 e e e 2 e 2 4 2 2 2 2 c . 
+            . . c 2 2 2 e e 2 2 2 2 2 2 2 e 
+            . . . e c c e c 2 2 2 2 2 2 2 e 
+            . . . . . . . c 2 e e 2 2 e 2 c 
+            . . . . . . . c e e e e e e 2 c 
+            . . . . . . . . c e 2 2 2 2 c . 
+            . . . . . . . . . c c c c c . . 
+            `, SpriteKind.Food)
+        tiles.placeOnRandomTile(fruit, assets.tile`transparency16`)
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`tile2`, function (sprite, location) {
-    game.over(false, effects.slash)
+    info.changeLifeBy(-3)
+    mySprite.setVelocity(-50, -50)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    info.changeLifeBy(1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.confetti, 500)
     if (mySprite.bottom < otherSprite.y) {
         mySprite.vy = -230
         otherSprite.setImage(img`
@@ -187,11 +294,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
             ..e3ee3ee.eeee..
             ..e34e34ec444e..
             .e444444ec4e4ee.
-            ee214421e44e44e.
-            e444444444eee4e.
-            e41ff1e44eece4e.
-            ee1ff1f4444ce4ee
-            ecfffff4444ce44e
+            eeff44ffe44e44e.
+            e444444944eee4e.
+            e41ff1e94eece4e.
+            ee1ff1f4944ce4ee
+            ecfffff4944ce44e
             ec2f22f4444cee4e
             4c22222444ec444e
             44c222444ec.4e4c
@@ -201,12 +308,14 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
             eeee4e.e444e....
             .e444e.e4eeee...
             `)
-        otherSprite.destroy(effects.confetti, 500)
         music.knock.play()
     } else {
         info.changeLifeBy(-1)
+        music.zapped.play()
     }
 })
+let fruit: Sprite = null
+let coiny: Sprite = null
 let myEnemy: Sprite = null
 let currentLevel = 0
 let mySprite: Sprite = null
@@ -310,8 +419,8 @@ game.onUpdate(function () {
                 . 3 1 1 1 3 3 3 1 1 3 3 b 3 3 . 
                 . 3 1 f 1 3 3 1 f 1 1 3 3 3 3 . 
                 . 3 1 1 1 3 3 1 1 1 3 3 3 3 3 . 
-                . 3 3 1 3 3 3 3 3 3 3 3 3 3 3 . 
-                . 3 3 3 3 3 3 3 3 3 3 3 3 3 3 . 
+                . 3 3 9 3 3 3 3 3 9 3 3 3 3 3 . 
+                . 3 3 9 3 3 3 3 3 9 3 3 3 3 3 . 
                 . 3 3 3 f f f 3 3 3 3 c 3 3 c . 
                 . 3 3 3 3 f f 3 3 3 3 c 3 3 c . 
                 . 3 3 3 3 3 3 3 3 3 3 3 c c 3 . 
@@ -329,8 +438,8 @@ game.onUpdate(function () {
                 . 3 3 b 3 3 1 1 3 3 3 1 1 1 3 . 
                 . 3 3 3 3 1 1 f 1 3 3 1 f 1 3 . 
                 . 3 3 3 3 3 1 1 1 3 3 1 1 1 3 . 
-                . 3 3 3 3 3 3 3 3 3 3 3 1 3 3 . 
-                . 3 3 3 3 3 3 3 3 3 3 3 3 3 3 . 
+                . 3 3 3 3 3 9 3 3 3 3 3 9 3 3 . 
+                . 3 3 3 3 3 9 3 3 3 3 3 9 3 3 . 
                 . c 3 3 c 3 3 3 3 f f f 3 3 3 . 
                 . c 3 3 c 3 3 3 3 f f 3 3 3 3 . 
                 . 3 c c 3 3 3 3 3 3 3 3 3 3 3 . 
