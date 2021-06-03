@@ -20,11 +20,11 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . 2 2 2 . . . . 2 2 . . . . 
-            . . 2 2 2 2 2 . . 2 2 2 . . . . 
-            . . 2 2 2 2 2 2 2 2 3 2 2 . . . 
-            . . 2 2 2 2 2 2 2 3 3 3 2 . . . 
-            . . 2 2 2 2 2 2 3 3 3 3 2 . . . 
+            . . . 2 2 2 . . . . 2 2 2 . . . 
+            . . 2 2 2 2 2 . . 2 2 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 2 3 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 3 3 3 2 2 . . 
+            . . 2 2 2 2 2 2 3 3 3 3 2 2 . . 
             . . . 2 2 2 2 2 2 3 3 2 2 . . . 
             . . . . 2 2 2 2 2 2 2 2 . . . . 
             . . . . . 2 2 2 2 2 2 . . . . . 
@@ -32,18 +32,39 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . 2 2 . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            `, mySprite, -50, 0)
+            `, mySprite, -100, 0)
+        projectile.lifespan = 700
+    } else if (mySprite.vx > 0) {
+        projectile = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 . . . . 2 2 2 . . . 
+            . . 2 2 2 2 2 . . 2 2 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 2 3 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 3 3 3 2 2 . . 
+            . . 2 2 2 2 2 2 3 3 3 3 2 2 . . 
+            . . . 2 2 2 2 2 2 3 3 2 2 . . . 
+            . . . . 2 2 2 2 2 2 2 2 . . . . 
+            . . . . . 2 2 2 2 2 2 . . . . . 
+            . . . . . . 2 2 2 2 . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, mySprite, 100, 0)
+        projectile.lifespan = 700
     } else {
         projectile = sprites.createProjectileFromSprite(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . 2 2 2 . . . . 2 2 . . . . 
-            . . 2 2 2 2 2 . . 2 2 2 . . . . 
-            . . 2 2 2 2 2 2 2 2 3 2 2 . . . 
-            . . 2 2 2 2 2 2 2 3 3 3 2 . . . 
-            . . 2 2 2 2 2 2 3 3 3 3 2 . . . 
+            . . . 2 2 2 . . . . 2 2 2 . . . 
+            . . 2 2 2 2 2 . . 2 2 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 2 3 2 2 2 . . 
+            . . 2 2 2 2 2 2 2 3 3 3 2 2 . . 
+            . . 2 2 2 2 2 2 3 3 3 3 2 2 . . 
             . . . 2 2 2 2 2 2 3 3 2 2 . . . 
             . . . . 2 2 2 2 2 2 2 2 . . . . 
             . . . . . 2 2 2 2 2 2 . . . . . 
@@ -51,8 +72,10 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . 2 2 . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            `, mySprite, 50, 0)
+            `, mySprite, randint(-10, 10), randint(0, -10))
+        projectile.lifespan = 700
     }
+    music.spooky.play()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
@@ -299,7 +322,7 @@ function startNextLevel () {
         )
         tiles.placeOnRandomTile(coiny, assets.tile`transparency16`)
     }
-    for (let index = 0; index < 2; index++) {
+    for (let index = 0; index < 1; index++) {
         fruit = sprites.create(img`
             . . . . . . . . . . . 6 6 6 6 6 
             . . . . . . . . . 6 6 7 7 7 7 8 
@@ -320,7 +343,7 @@ function startNextLevel () {
             `, SpriteKind.Food)
         tiles.placeOnRandomTile(fruit, assets.tile`transparency16`)
     }
-    for (let index = 0; index < 2; index++) {
+    for (let index = 0; index < 1; index++) {
         fruit = sprites.create(img`
             . . . . . . b b b b . . . . . . 
             . . . . . . b 4 4 4 b . . . . . 
@@ -367,8 +390,7 @@ function makePlayer () {
     return mySprite
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`tile2`, function (sprite, location) {
-    sprite.vx = -50
-    sprite.vy = -50
+    sprite.vy = -150
     sprite.setKind(SpriteKind.Invincible)
     sprite.lifespan = 1000
     sprite.startEffect(effects.disintegrate)
@@ -384,7 +406,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.destroy()
-    sprite.destroy()
+    sprite.destroy(effects.warmRadial, 100)
+    music.smallCrash.play()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.destroy(effects.confetti, 500)
