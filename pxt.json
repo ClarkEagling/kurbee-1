@@ -2,7 +2,8 @@
     "name": "Kurbee  1",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "sound effects": "github:klausw3/pxt-sound-effects#v1.1.0"
     },
     "files": [
         "main.blocks",
